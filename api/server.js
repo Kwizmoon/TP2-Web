@@ -3,15 +3,20 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
 
-app.get('/api', (req, res) => {
-    res.json({ message: 'API Dex fonctionnelle' });
-});
+app.use(cors()); // Permet au frontend (PHP / Vue.js) de communiquer avec l'API
+app.use(express.json()); // Permet de lire le JSON envoyé dans le req.body (pour les PUT / POST)
 
-const PORT = 3000;
+// Import des routes
+const coursRoutes = require('./routes/cours');
+const travauxRoutes = require('./routes/travaux');
 
-app.listen(PORT, () => {
-    console.log(`API démarrée sur http://localhost:${PORT}`);
+// Utilisation des routes
+app.use('/api/cours', coursRoutes);
+app.use('/api/travaux', travauxRoutes);
+
+
+// Demarrer serveur
+app.listen(3000, () => {
+    console.log(`API démarrée sur http://localhost:${3000}`);
 });
