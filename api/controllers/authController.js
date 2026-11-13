@@ -37,3 +37,28 @@ const connexion = async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 };
+
+// POST /api/deconnexion
+const deconnexion = async (req, res) => {
+    try {
+        // Récupérer le jeton depuis l'en-tête Authorization (ex: "Bearer token")
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader) {
+            return res.status(400).json({ error: "Aucun jeton fourni" });
+        }
+
+        const token = authHeader.split(' ')[1]; // Extrait la partie apres "Bearer"
+
+        // Invalider le jeton en le mettant a NULL dans la bd
+        await pool.query('UPDATE utilisateurs SET token = NULL WHERE token = ?', [token]);
+
+        res.json({ success: true, message: "Déconnexion réussie" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+};
+
+module.exports = { connexion, deconnexion };
+
