@@ -1,6 +1,6 @@
 const pool = require('../config/database');
 
-const verifierToken = async (req, res) => {
+const verifierToken = async (req, res, next) => {
     try {
         // Recuperer l'en-tete Authorization
         const authHeader = req.headers.authorization;
