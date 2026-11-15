@@ -28,7 +28,7 @@ const getTravauxOuverts = async (req, res) => {
 const getTravailId = async (req, res) => {
     try {
         const { id } = req.params;
-        const [travail] = await pool.query('SELECT w FROM travaux WHERE id = ?', [id]);
+        const [travail] = await pool.query('SELECT * FROM travaux WHERE id = ?', [id]);
 
         if (travail.length === 0) {
             return res.status(404).json({ error: "Travail introuvable" });
