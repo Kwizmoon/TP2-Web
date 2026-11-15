@@ -43,3 +43,18 @@ export async function getCours() {
     }
     return data;
 }
+
+// Recupere les travaux ouverts, coursId optionnel ( ex: 420-244-AH )
+export async function getTravauxOuverts(coursId = '') {
+    let url = `${API_URL}/travaux`;
+    // si un id de cours est fourni en param
+    if (coursId) {
+        url += `?cours=${encodeURIComponent(coursId)}`; // encodeURIComponent encode la valeur pour éviter les bugs avec les caractères spéciaux.
+    }
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error)
+    }
+    return data;
+}
