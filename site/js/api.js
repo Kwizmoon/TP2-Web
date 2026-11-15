@@ -78,3 +78,18 @@ export async function getDisponibilites(id) {
     }
     return data;
 }
+
+// Modifie la disponibilite de l'etudiant
+export async function updateDisponibilites(idTravail, matricule, nom, creneaux) {
+    const response = await fetch(`${API_URL}/travaux/${idTravail}/disponibiltes/${matricule}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({nom, creneaux})
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
