@@ -68,3 +68,13 @@ export async function getTravailId(id) {
     }
     return data;
 }
+
+// Recupere disponibilités agrégées : pour chaque créneau, le nombre d’étudiants disponibles et leurs noms.
+export async function getDisponibilites(id) {
+    const response = await fetch(`${API_URL}/travaux/${id}/disponibiltes`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
