@@ -125,3 +125,33 @@ export async function updateTravail(token, idTravail, travailData) {
     }
     return data;
 }
+
+// Ajouter un creneau au travail
+export async function ajouterCreneau(token, idTravail, debut, fin) {
+    const response = await fetch(`${API_URL}/travaux/${idTravail}/creneaux`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+        body: JSON.stringify({debut,fin})
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
+
+// Modifier un creneau
+export async function updateCreneau(token, idCreneau, debut, fin) {
+    const response = await fetch(`${API_URL}/creneau/${idCreneau}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+        body: JSON.stringify({debut,fin})
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
