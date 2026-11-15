@@ -30,3 +30,16 @@ export async function deconnecterAdmin(token) {
     }
     return data;
 }
+
+
+// ------------------- PARTIE ÉTUDIANT (Routes publiques) -------------------
+
+// Recupere tous les cours
+export async function getCours() {
+    const response = await fetch(`${API_URL}/cours`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
