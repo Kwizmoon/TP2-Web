@@ -81,4 +81,55 @@ const updateTravail = async (req, res) => {
 };
 
 
-module.exports = { getAdminTravaux, updateTravail };
+// POST /api/travaux/:id/creneaux - Ajoute un créneau au travail.
+const ajouterCreneau = async (req, res) => {
+    try {
+        const {id: travailId} = req.params; // id du travail
+        const { debut, fin } = req.body; // Date debut et fin
+        const enseignantId = req.utilisateur.id;
+
+        // Verifier si le travaill exist
+        const [travailExist] = await pool.query('SELECT * FROM travaux WHERE id = ?', [travailId]);
+        if (travailExist.length === 0) {
+            return res.status(404).json({error: "Travail introuvable"});
+        }
+
+        // Verifier si travail apartien a un cours de l'enseigant
+        const [travailEnseignant] = await pool.query(`
+            SELECT t.id FROM travaux t
+            JOIN cours c ON t.cours_id = c.id
+            WHERE t.id = ? AND c.enseignant_id = ?
+        `, [travailId, enseignantId]
+        );
+
+        if (travailEnseignant.length === 0) {
+            return res.status(403).json({error: "Travail n'appartient pas à un de vos cours"})
+        }
+        
+        // Validation des dates du creaneu
+        const dateDebut = new Date(debut);
+        const dateFin = new Date(fin);
+
+        if (isNaN(dateDebut.getTime()) || isNaN(dateFin.getTime()) || dateFin <= dateDebut) {
+            return res.status(400).json({ error: "Dates invalides ou 'fin' antérieure/égale à 'debut'." });
+        }
+
+        // Generation du id du nouveau creneau sous la forme <id du travail>-NN, avec le prochain numéro libre sur deux chiffres (par exemple web2-tp1-04)
+        const [creneauIdExistant] = await pool.query('SELECT id FROM creneaux WHERE travail_id = ?',[travailId]); 
+        const prochainId = String(creneauIdExistant + 1).padStart(2, '0'); // Ajoute un zero devant si la chaine fait moins de 2 caracteres (par exemple web2-tp1-4 -> 04)
+        const creneauId = `${travailId}-${prochainId}`;
+
+        // Insertion dans la bd
+        await pool.query(`
+            INSERT INTO creneaux (id, travail_id, debut, fin)
+            VALUES (?,?,?,?)
+            `, [creneauId, travailId, debut, fin])
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+}
+
+
+module.exports = { getAdminTravaux, updateTravail, ajouterCreneau };
