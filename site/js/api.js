@@ -110,3 +110,18 @@ export async function getAdminTravaux(token) {
     }
     return data;
 }
+
+// Modifer un travail
+export async function updateTravail(token, idTravail, travailData) {
+    const response = await fetch(`${API_URL}/travaux/${idTravail}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+        body: JSON.stringify(travailData)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
