@@ -14,8 +14,8 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 
 // Utilisation des routes
-app.use('/api/cours', coursRoutes);     // Gere /api/cours
-app.use('/api/travaux', travauxRoutes); // Gere /api/travaux (?cours=<id>)  /api/travaux/:id  /api/travaux/:id/disponibilites   /api/travaux/:id/disponibilites/:matricule 
+app.use('/api', coursRoutes);     // Gere /api/cours
+app.use('/api', travauxRoutes); // Gere /api/travaux (?cours=<id>)  /api/travaux/:id  /api/travaux/:id/disponibilites   /api/travaux/:id/disponibilites/:matricule 
 app.use('/api', authRoutes);            // Gere /api/connexion et /api/deconnexion
 app.use('/api', adminRoutes);           // Gere /api/admin/travaux  PUT /api/travaux/:id  POST /api/travaux/:id/creneaux  PUT /api/creneaux/:id  DELETE /api/creneaux/:id
 
