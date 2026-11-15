@@ -71,7 +71,7 @@ export async function getTravailId(id) {
 
 // Recupere disponibilités agrégées : pour chaque créneau, le nombre d’étudiants disponibles et leurs noms.
 export async function getDisponibilites(id) {
-    const response = await fetch(`${API_URL}/travaux/${id}/disponibiltes`);
+    const response = await fetch(`${API_URL}/travaux/${id}/disponibilites`);
     const data = await response.json();
     if (!response.ok) {
         throw new Error(data.error);
@@ -81,7 +81,7 @@ export async function getDisponibilites(id) {
 
 // Modifie la disponibilite de l'etudiant
 export async function updateDisponibilites(idTravail, matricule, nom, creneaux) {
-    const response = await fetch(`${API_URL}/travaux/${idTravail}/disponibiltes/${matricule}`, {
+    const response = await fetch(`${API_URL}/travaux/${idTravail}/disponibilites/${matricule}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({nom, creneaux})
@@ -143,7 +143,7 @@ export async function ajouterCreneau(token, idTravail, debut, fin) {
 
 // Modifier un creneau
 export async function updateCreneau(token, idCreneau, debut, fin) {
-    const response = await fetch(`${API_URL}/creneau/${idCreneau}`, {
+    const response = await fetch(`${API_URL}/creneaux/${idCreneau}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
         body: JSON.stringify({debut,fin})
@@ -158,7 +158,7 @@ export async function updateCreneau(token, idCreneau, debut, fin) {
 
 // Suppression d'un creneau
 export async function deleteCreneau(token, idCreneau) {
-    const response = await fetch(`${API_URL}/creneau/${idCreneau}`, {
+    const response = await fetch(`${API_URL}/creneaux/${idCreneau}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
     });
