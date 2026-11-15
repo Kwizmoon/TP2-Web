@@ -93,3 +93,20 @@ export async function updateDisponibilites(idTravail, matricule, nom, creneaux) 
     }
     return data;
 }
+
+
+//------------------- PARTIE ADMIN (Routes prive) -------------------
+
+// Recupere les travaux des cours de l'enseignant connecter
+export async function getAdminTravaux(token) {
+    const response = await fetch(`${API_URL}/admin/travaux`, {
+        method: 'GET',
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
