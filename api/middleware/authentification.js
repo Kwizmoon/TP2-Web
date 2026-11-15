@@ -13,7 +13,7 @@ const verifierToken = async (req, res) => {
         const token = authHeader.split(' ')[1];
 
         // Verifier dans la bd si l'utilisateur a ce jeton
-        const [rows] = await pool.query.pool('SELECT * FROM utilisateurs WHERE token = ?', [token]);
+        const [rows] = await pool.query('SELECT * FROM utilisateurs WHERE token = ?', [token]);
 
         if (rows.length === 0) {
             return res.status(401).json({error: "Jeton invalide" });
