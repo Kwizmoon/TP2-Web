@@ -178,4 +178,40 @@ const updateCreneau = async (req, res) => {
 };
 
 
-module.exports = { getAdminTravaux, updateTravail, ajouterCreneau, updateCreneau };
+// DELETE /api/creneaux/:id - Supprime un créneau. Ses disponibilités sont supprimées avec lui (cascade)
+const deleteCreneau = async (req, res) => {
+    try {
+        const {id} = req.params; // id du creneau
+        const enseignantId = req.utilisateur.id;
+
+        // Verifier si le creneau existe
+        const [creneauExist] = await pool.query('SELECT id FROM creneaux WHERE id = ?', [id]);
+        if (creneauExist.length === 0) {
+            return res.status(404).json({error: "Creneau introuvable"})
+        }
+
+        // Verifier si creneau appartien a un cours de l'enseignant
+        const [creneauEnseignant] = await pool.query(`
+            SELECT cr.id FROM creneaux cr
+            JOIN travaux t ON cr.travail_id = t.id
+            JOIN cours c ON t.cours_id = c.id
+            WHERE cr.id = ? AND c.enseignant_id = ?      
+            `, [id, enseignantId]);
+        
+        if (creneauEnseignant.length === 0) {
+            return res.status(403).json({ error: "Creneau n'appartient pas à un de vos cours" });
+        }
+
+        // Suppression du creneau de la bd
+        await pool.query('DELETE FROM creneaux WHERE id = ?', [id]);
+        res.status(200).json({success: true, message: "Creneau suuprimé"});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+    
+    
+}
+
+module.exports = { getAdminTravaux, updateTravail, ajouterCreneau, updateCreneau, deleteCreneau};
