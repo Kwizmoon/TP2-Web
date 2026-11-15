@@ -155,3 +155,17 @@ export async function updateCreneau(token, idCreneau, debut, fin) {
     }
     return data;
 }
+
+// Suppression d'un creneau
+export async function deleteCreneau(token, idCreneau) {
+    const response = await fetch(`${API_URL}/creneau/${idCreneau}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
