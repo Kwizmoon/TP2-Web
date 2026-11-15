@@ -10,7 +10,7 @@ const getAdminTravaux = async (req, res) => {
             SELECT t.*, c.titre AS titre_cours 
             FROM travaux t
             JOIN cours c ON t.cours_id = c.id
-            WHERE c.enseignant_id = ?
+            WHERE c.utilisateur_id = ?
             `, [enseignantId]);
         
         res.json(travaux);
@@ -210,8 +210,6 @@ const deleteCreneau = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: "Erreur serveur" });
     }
-    
-    
 }
 
 module.exports = { getAdminTravaux, updateTravail, ajouterCreneau, updateCreneau, deleteCreneau};
