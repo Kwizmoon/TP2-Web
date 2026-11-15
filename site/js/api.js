@@ -58,3 +58,13 @@ export async function getTravauxOuverts(coursId = '') {
     }
     return data;
 }
+
+//Recupere un travail et ses creneaux
+export async function getTravailId(id) {
+    const response = await fetch(`${API_URL}/travaux/${id}`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error);
+    }
+    return data;
+}
