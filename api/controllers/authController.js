@@ -17,7 +17,7 @@ const connexion = async (req, res) => {
         const utilisateur = rows[0];
 
         // Verifier le mdp hacher avec bcrypt
-        const mdpCorrect = await bcrypt.compare(motDePasse, utilisateur.mot_de_passe);
+        const mdpCorrect = await bcrypt.compare(motDePasse, utilisateur.mot_de_passe_hache);
 
         if (!mdpCorrect){
             return res.status(401).json({error: "Identifiant ou mot de passe invalide"});
