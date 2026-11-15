@@ -116,7 +116,7 @@ const ajouterCreneau = async (req, res) => {
 
         // Generation du id du nouveau creneau sous la forme <id du travail>-NN, avec le prochain numéro libre sur deux chiffres (par exemple web2-tp1-04)
         const [creneauIdExistant] = await pool.query('SELECT id FROM creneaux WHERE travail_id = ?',[travailId]); 
-        const prochainId = String(creneauIdExistant + 1).padStart(2, '0'); // Ajoute un zero devant si la chaine fait moins de 2 caracteres (par exemple web2-tp1-4 -> 04)
+        const prochainId = String(creneauIdExistant.length + 1).padStart(2, '0'); // Ajoute un zero devant si la chaine fait moins de 2 caracteres (par exemple web2-tp1-4 -> 04)
         const creneauId = `${travailId}-${prochainId}`;
 
         // Insertion dans la bd
