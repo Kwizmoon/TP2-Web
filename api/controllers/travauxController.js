@@ -113,8 +113,8 @@ const updateDisponibilites = async (req, res) => {
 };
 
 module.exports = {
-    getTravaux,
-    getTravailById,
+    getTravauxOuverts,
+    getTravailId,
     getDisponibilites,
     updateDisponibilites
 };
