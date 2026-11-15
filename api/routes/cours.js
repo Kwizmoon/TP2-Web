@@ -3,7 +3,7 @@ const router = express.Router();
 const { getCours } = require('../controllers/coursController');
 
 // GET /api/cours
-router.get('/', getCours);
+router.get('/cours', getCours);
 
 // importer cette fonction avec require() dans server.js
 module.exports = router;
