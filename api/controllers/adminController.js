@@ -89,7 +89,7 @@ const ajouterCreneau = async (req, res) => {
         const enseignantId = req.utilisateur.id;
 
         // Verifier si le travaill exist
-        const [travailExist] = await pool.query('SELECT * FROM travaux WHERE id = ?', [travailId]);
+        const [travailExist] = await pool.query('SELECT id FROM travaux WHERE id = ?', [travailId]);
         if (travailExist.length === 0) {
             return res.status(404).json({error: "Travail introuvable"});
         }
@@ -124,12 +124,58 @@ const ajouterCreneau = async (req, res) => {
             INSERT INTO creneaux (id, travail_id, debut, fin)
             VALUES (?,?,?,?)
             `, [creneauId, travailId, debut, fin])
+        
+        res.status(201).json({success: true, message: "Creneau créer"})
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Erreur serveur" });
     }
-}
+};
 
 
-module.exports = { getAdminTravaux, updateTravail, ajouterCreneau };
+// PUT /api/creneaux/:id - Modifie les heures d’un créneau. Un créneau ne peut pas changer de travail.
+const updateCreneau = async (req, res) => {
+    try {
+        const {id} = req.params; // id du creneau
+        const { debut, fin } = req.body;
+        const enseignantId = req.utilisateur.id;
+
+        // Verifier si le creneau existe
+        const [creneauExist] = await pool.query('SELECT id FROM creneaux WHERE id = ?', [id]);
+        if (creneauExist.length === 0) {
+            return res.status(404).json({error: "Creneau introuvable"})
+        }
+
+        // Verifier si creneau appartien a un cours de l'enseignant
+        const [creneauEnseignant] = await pool.query(`
+            SELECT cr.id FROM creneaux cr
+            JOIN travaux t ON cr.travail_id = t.id
+            JOIN cours c ON t.cours_id = c.id
+            WHERE cr.id = ? AND c.enseignant_id = ?      
+            `, [id, enseignantId]);
+        
+        if (creneauEnseignant.length === 0) {
+            return res.status(403).json({ error: "Creneau n'appartient pas à un de vos cours" });
+        }
+
+        // Validation des dates du creaneu
+        const dateDebut = new Date(debut);
+        const dateFin = new Date(fin);
+
+        if (isNaN(dateDebut.getTime()) || isNaN(dateFin.getTime()) || dateFin <= dateDebut) {
+            return res.status(400).json({ error: "Dates invalides ou 'fin' antérieure/égale à 'debut'." });
+        }
+
+        // Mise a jour du creneau (travail_id change pas)
+        await pool.query('UPDATE creneaux SET debut = ?, fin = ? WHERE id = ?', [debut, fin, id]);
+        res.status(200).json({success: true, message: "Creneau mis à jour"})
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+};
+
+
+module.exports = { getAdminTravaux, updateTravail, ajouterCreneau, updateCreneau };
