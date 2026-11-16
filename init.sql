@@ -62,26 +62,26 @@ INSERT IGNORE INTO utilisateurs (id, identifiant, mot_de_passe_hache, nom) VALUE
     (2, 'prof2', '$2a$10$OBGahrOicW672peyyFaThutgGQx2x1oocG7uH6EQNioSEayUlzO9G', 'Marc Tremblay');
 
 INSERT IGNORE INTO cours (id, titre, utilisateur_id) VALUES
-    ('420-244-AH', 'Bases de donnÃ©es applicatives', 2),
+    ('420-244-AH', 'Bases de données applicatives', 2),
     ('420-245-AH', 'Programmation Web 1', 1),
     ('420-248-AH', 'Programmation Web 2', 1),
-    ('420-253-AH', 'Projet de fin d''Ã©tudes', 2);
+    ('420-253-AH', 'Projet de fin d''études', 2);
 
 INSERT IGNORE INTO travaux (id, cours_id, titre, description, type, disponible, remise, ouvert) VALUES
-    ('web1-tp1', '420-245-AH', 'TP1 â€” Catalogue de produits',
-     'Construire une premiÃ¨re application PHP permettant d''afficher et de filtrer un catalogue.',
+    ('web1-tp1', '420-245-AH', 'TP1 — Catalogue de produits',
+     'Construire une première application PHP permettant d''afficher et de filtrer un catalogue.',
      'individuel', '2026-09-01', '2026-09-20 23:59:00', FALSE),
-    ('web2-tp1', '420-248-AH', 'TP1 â€” Gestion de rÃ©servations',
-     'DÃ©velopper une application Web transactionnelle permettant d''enregistrer et de consulter des rÃ©servations.',
+    ('web2-tp1', '420-248-AH', 'TP1 — Gestion de réservations',
+     'Développer une application Web transactionnelle permettant d''enregistrer et de consulter des réservations.',
      'equipe', '2026-09-21', '2026-10-18 23:59:00', TRUE),
-    ('bdd-lab2', '420-244-AH', 'Laboratoire 2 â€” RequÃªtes SQL',
-     'Ã‰crire et tester des requÃªtes SQL sur une base de donnÃ©es relationnelle fournie.',
+    ('bdd-lab2', '420-244-AH', 'Laboratoire 2 — Requêtes SQL',
+     'Écrire et tester des requêtes SQL sur une base de données relationnelle fournie.',
      'individuel', '2026-09-28', '2026-10-12 23:59:00', TRUE),
-    ('bdd-tp1', '420-244-AH', 'TP1 â€” ModÃ©lisation d''une bibliothÃ¨que',
-     'Concevoir un modÃ¨le relationnel et produire le script SQL permettant de crÃ©er la base de donnÃ©es.',
+    ('bdd-tp1', '420-244-AH', 'TP1 — Modélisation d''une bibliothèque',
+     'Concevoir un modèle relationnel et produire le script SQL permettant de créer la base de données.',
      'equipe', '2026-10-05', '2026-10-25 23:59:00', TRUE),
     ('pfe-prototype', '420-253-AH', 'Prototype fonctionnel',
-     'Produire une premiÃ¨re version fonctionnelle du projet et prÃ©parer une dÃ©monstration Ã  l''Ã©quipe enseignante.',
+     'Produire une première version fonctionnelle du projet et préparer une démonstration à l''équipe enseignante.',
      'equipe', '2026-09-15', '2026-10-09 23:59:00', TRUE);
 
 INSERT IGNORE INTO creneaux (id, travail_id, debut, fin) VALUES
