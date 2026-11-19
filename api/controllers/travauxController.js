@@ -104,9 +104,9 @@ const updateDisponibilites = async (req, res) => {
         if (creneaux && creneaux.length > 0) {
             for (const creneauId of creneaux) {
                 await connection.query(`
-                    INSERT INTO disponibilites (creneau_id, matricule, nom) 
-                    VALUES (?, ?, ?)
-                `, [creneauId, matricule, nom]);
+                    INSERT INTO disponibilites (travail_id, creneau_id, matricule, nom) 
+                    VALUES (?, ?, ?, ?)
+                `, [id, creneauId, matricule, nom]);
             }
         }
 
