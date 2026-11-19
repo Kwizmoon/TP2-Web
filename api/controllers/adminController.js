@@ -32,7 +32,7 @@ const updateTravail = async (req, res) => {
         const [travaux] = await pool.query(`
             SELECT t.* FROM travaux t
             JOIN cours c ON t.cours_id = c.id
-            WHERE t.id = ? AND c.enseignant_id = ?
+            WHERE t.id = ? AND c.utilisateur_id = ?
         `, [id, enseignantId]);
 
         if (travaux.length === 0) {
