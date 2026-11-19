@@ -6,7 +6,7 @@ body {
     background-color: #f7f9fa;
     margin: 0;
     padding: 2rem;
-    max-width: 1100px; 
+    max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -36,20 +36,48 @@ form {
     margin-bottom: 1.25rem;
 }
 
-.form-group label {
+.form-group label,
+form label {
     font-weight: 600;
     display: inline-block;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.35rem;
+    color: #334155;
 }
 
-select, input[type="text"] {
+select,
+input[type="text"],
+input[type="password"],
+input[type="datetime-local"],
+textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     font-size: 1rem;
+    font-family: inherit;
     box-sizing: border-box;
     background-color: #fff;
+    color: #333333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime-local"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.input-description {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.input-erreur {
+    border-color: #ef4444 !important;
 }
 
 input[type="checkbox"] {
@@ -57,24 +85,57 @@ input[type="checkbox"] {
     margin-right: 0.5rem;
 }
 
-button[type="submit"] {
+button[type="submit"],
+.btn {
     background-color: #3b82f6;
-    color: white;
+    color: #ffffff;
     border: none;
     padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
-button[type="submit"]:hover {
+button[type="submit"]:hover,
+.btn:hover {
     background-color: #2563eb;
 }
 
+button:disabled,
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-supprimer {
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-supprimer:hover {
+    background-color: #dc2626;
+}
+
 /* Error Messages */
-.error {
+.error,
+.erreur {
     color: #ef4444;
     font-size: 0.85rem;
     margin-top: 0.25rem;
@@ -200,6 +261,105 @@ button[type="submit"]:hover {
     margin-top: 0.2rem;
     margin-bottom: 0.5rem;
 }
+
+/* Admin Page Styling */
+.admin-main .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-main .toolbar h1 {
+    margin: 0;
+}
+
+.admin-main .toolbar-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.admin-main .liste-travaux {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-main .travail-item {
+    background: #ffffff;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-main .travail-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.admin-main .travail-meta {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.admin-main .bloc-section {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.75rem;
+}
+
+.admin-main .bloc-section > form {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
+    margin-bottom: 1.5rem;
+}
+
+.admin-main .bloc-section > form > div {
+    margin-bottom: 1rem;
+}
+
+.admin-main .creneau-carte {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #3b82f6;
+    border-radius: 8px;
+    padding: 1.15rem 1.25rem;
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.admin-main .creneau-reponses {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.admin-main .creneau-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 /* Header Styling (Integrated cleanly into the layout width) */
 .site-header {
     background-color: #ffffff;
