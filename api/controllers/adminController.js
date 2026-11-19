@@ -98,7 +98,7 @@ const ajouterCreneau = async (req, res) => {
         const [travailEnseignant] = await pool.query(`
             SELECT t.id FROM travaux t
             JOIN cours c ON t.cours_id = c.id
-            WHERE t.id = ? AND c.enseignant_id = ?
+            WHERE t.id = ? AND c.utilisateur_id = ?
         `, [travailId, enseignantId]
         );
 
@@ -152,7 +152,7 @@ const updateCreneau = async (req, res) => {
             SELECT cr.id FROM creneaux cr
             JOIN travaux t ON cr.travail_id = t.id
             JOIN cours c ON t.cours_id = c.id
-            WHERE cr.id = ? AND c.enseignant_id = ?      
+            WHERE cr.id = ? AND c.utilisateur_id = ?      
             `, [id, enseignantId]);
         
         if (creneauEnseignant.length === 0) {
@@ -195,7 +195,7 @@ const deleteCreneau = async (req, res) => {
             SELECT cr.id FROM creneaux cr
             JOIN travaux t ON cr.travail_id = t.id
             JOIN cours c ON t.cours_id = c.id
-            WHERE cr.id = ? AND c.enseignant_id = ?      
+            WHERE cr.id = ? AND c.utilisateur_id = ?      
             `, [id, enseignantId]);
         
         if (creneauEnseignant.length === 0) {
