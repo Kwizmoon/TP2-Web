@@ -1,129 +1,66 @@
 <?php
-
-session_start();
-require_once 'init.php';
-
-
-$requeteCours = $pdo->prepare('SELECT id, titre FROM cours ORDER BY titre ASC');
-$requeteCours->execute();
-$listCours = $requeteCours->fetchAll(PDO::FETCH_ASSOC);
-
-/*foreach ($cours as $c) {
-    echo htmlspecialchars($c['titre']) . ' : ';
-}
-*/
-
-//Recupere le filtre choisi dans l'URL
-$coursFiltrer = $_GET['cours'] ?? '';
-
-if (!empty($coursFiltrer)) {
-    $requeteTravail = $pdo->prepare(
-        'SELECT 
-         t.id AS travail_id,
-         t.titre AS travail_titre, 
-         t.type, 
-         t.remise, 
-         c.id AS cours_id,
-         c.titre AS cours_titre
-         FROM travaux t
-         JOIN cours c ON t.cours_id = c.id
-         WHERE t.ouvert = 1 AND c.id = :cours_id
-         ORDER BY c.titre ASC, t.remise ASC'
-         );
-    
-    $requeteTravail->execute(['cours_id' => $coursFiltrer]);
-} else {
-    $requeteTravail = $pdo->prepare(
-        'SELECT 
-         t.id AS travail_id,
-         t.titre AS travail_titre, 
-         t.type, 
-         t.remise, 
-         c.id AS cours_id,
-         c.titre AS cours_titre
-         FROM travaux t
-         JOIN cours c ON t.cours_id = c.id
-         WHERE t.ouvert = :open
-         ORDER BY c.titre ASC, t.remise ASC'
-         );
-    $requeteTravail->execute(['open' => 1]);
-}
-
-$travaux = $requeteTravail->fetchAll(PDO::FETCH_ASSOC);
-
-// Travaux par cours
-
-$travailParCours = [];
-foreach ($travaux as $travail) {
-    $travailParCours[$travail['cours_titre']][] = $travail;   
-}
-/*
-foreach ($travailParCours as $coursNom => $listTravail) {
-    echo htmlspecialchars($coursNom) . ' : ';
-    foreach ($listTravail as $travail){
-        echo htmlspecialchars($travail['travail_titre']);
-    }
-}
-*/
-
+// On récupère le filtre de cours initial depuis l'URL (si présent)
+$coursInitial = $_GET['cours'] ?? '';
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Liste des travaux</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des travaux</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-        <?php include 'header.php'?>
-        
+    <?php include 'header.php'; ?>
+
+    <main id="app">
         <h1>Travaux</h1>
 
-        <form method="GET" action="index.php">
+        <!-- Formulaire de filtrage par cours -->
+        <form @submit.prevent>
             <label for="cours">Filtrer par cours : </label>
-            <select name="cours" id="cours" onchange="this.form.submit()">
+            <select name="cours" id="cours" v-model="coursSelectionne" @change="chargerTravaux">
                 <option value="">-- Tous les cours --</option>
-                <?php foreach ($listCours as $cours): ?>
-                    <option value="<?= htmlspecialchars($cours['id']) ?>" 
-                        <?= ($coursFiltrer == $cours['id']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($cours['titre']) ?>
-                    </option>
-                <?php endforeach; ?>
+                <option v-for="c in listCours" :key="c.id" :value="c.id">
+                    {{ c.titre }}
+                </option>
             </select>
-            
         </form>
 
         <hr>
-        <main>
-            <?php if (empty($travailParCours)): ?>
-                <p>Aucun cours trouvé.</p>
-            <?php else: ?>
-            <?php foreach ($travailParCours as $nomCours => $listeTravail): ?>
-                <div class="cours-bloc">
-                    <h2><?= htmlspecialchars($nomCours) ?></h2>
 
-                    <?php foreach ($listeTravail as $travail): ?>
-                        <a href="travail.php?id=<?= htmlspecialchars($travail['travail_id'])?>" class="card-link">
-                            <div class="travail-card">
-                                <h3 class="card-titre"><?= htmlspecialchars($travail['travail_titre']) ?></h3>
-                                <p class="card-type"><?= htmlspecialchars($travail['type']) ?></p>
-                                <p class="card-date">Remise : <?= htmlspecialchars($travail['remise']) ?></p>
-                                <a href=""></a>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
+        <!-- Messages de chargement ou d'erreur -->
+        <div v-if="loading">Chargement des travaux...</div>
+        <div v-if="error" class="error">{{ error }}</div>
+
+        <!-- Affichage des travaux -->
+        <div v-if="!loading">
+            <p v-if="Object.keys(travailParCours).length === 0">Aucun travail ouvert trouvé.</p>
+
+            <!-- Boucle sur chaque cours -->
+            <div v-for="(listeTravail, nomCours) in travailParCours" :key="nomCours" class="cours-bloc">
+                <h2>{{ nomCours }}</h2>
+
+                <!-- Boucle sur les travaux de ce cours -->
+                <div v-for="travail in listeTravail" :key="travail.id" class="travail-card">
+                    <a :href="'travail.php?id=' + travail.id" class="card-link">
+                        <h3 class="card-titre">{{ travail.titre }}</h3>
+                        <p class="card-type">{{ travail.type }}</p>
+                        <p class="card-date">Remise : {{ formaterDate(travail.remise) }}</p>
+                    </a>
                 </div>
-            <?php endforeach; ?>
-            <?php endif; ?>
- 
-        </main>
+            </div>
+        </div>
+    </main>
 
-        <?php include 'footer.php'?>
-        
+    <?php include 'footer.php'; ?>
 
+    <!-- Injection propre de la variable PHP vers le JS -->
+    <script>
+        window.COURS_INITIAL = "<?= htmlspecialchars($coursInitial) ?>";
+    </script>
 
-
-    </body>
+    
+    <script type="module" src="js/index.js"></script>
+</body>
 </html>
