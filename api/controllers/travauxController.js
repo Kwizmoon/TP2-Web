@@ -58,13 +58,19 @@ const getDisponibilites = async (req, res) => {
         const { id } = req.params;
         // Requête pour regrouper les étudiants par créneau
         const [rows] = await pool.query(`
-            SELECT c.id AS creneau_id, c.date, c.heure, 
-            COUNT(d.matricule) AS nb_etudiants, 
-            JSON_ARRAYAGG(JSON_OBJECT('matricule', d.matricule, 'nom', d.nom)) AS etudiants
+            SELECT
+                c.id AS creneau_id,
+                c.debut,
+                c.fin,
+                COUNT(d.id) AS nombre_eleve,
+                COALESCE(GROUP_CONCAT(d.nom ORDER BY d.nom SEPARATOR ', '), '') AS liste_etudiant
             FROM creneaux c
-            LEFT JOIN disponibilites d ON c.id = d.creneau_id
+            LEFT JOIN disponibilites d
+                ON d.creneau_id = c.id
+                AND d.travail_id = c.travail_id
             WHERE c.travail_id = ?
-            GROUP BY c.id
+            GROUP BY c.id, c.debut, c.fin
+            ORDER BY c.debut ASC
         `, [id]);
 
         res.json(rows);
