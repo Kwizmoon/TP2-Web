@@ -200,13 +200,13 @@ button[type="submit"]:hover {
     margin-top: 0.2rem;
     margin-bottom: 0.5rem;
 }
-
 /* Header Styling (Integrated cleanly into the layout width) */
 .site-header {
     background-color: #ffffff;
     padding: 1rem 1.5rem;
     border: 1px solid #e2e8f0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
     border-radius: 8px;
@@ -223,6 +223,21 @@ button[type="submit"]:hover {
 
 .site-header .logo:hover {
     color: #1d4ed8;
+}
+
+.site-header .btn-connexion {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.site-header .btn-connexion:hover {
+    background-color: #1d4ed8;
 }
 
 .site-header .nom {
