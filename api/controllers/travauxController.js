@@ -5,7 +5,14 @@ const getTravauxOuverts = async (req, res) => {
     try {
     
         const { cours } = req.query; // recuperer le parametre cours si il est dans le URL (?cours=<id>)
-        let query = 'SELECT * FROM travaux WHERE ouvert = true';
+
+        // JOIN avec la table cours pour recuperer le titre du cours
+        let query = `
+            SELECT travaux.*, cours.titre AS cours_titre 
+            FROM travaux 
+            JOIN cours ON travaux.cours_id = cours.id 
+            WHERE travaux.ouvert = true
+        `;
         let params = [];
 
         // si le param cours existe, on filtre par cours et le param va dans le tableau params
