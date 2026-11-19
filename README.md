@@ -180,6 +180,7 @@ Dex-TP2/
         ├── travail.js
         └── admin.js
 
+```
 ---
 
 ## Technologies utilisées
